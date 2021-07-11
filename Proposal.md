@@ -26,29 +26,30 @@ I will also compare with similar models that can be found on Kaggle <sup>2</sup>
 ![](images/screenshot_kaggle.png)
 
 ### Evaluation Metrics
-I will calcuate accuracy of the detectors of human faces and dogs based on the total correctly detected images divided by the total predictions which should give us a result close to 100%. I will also calculate the accuracy of both the CNN models based on total correctly classified divided by the total classified. In addition to this I will use the loss calculation built into the scikit-learn library <sup>3</sup> to compare against the kaggle models.
+I will calcuate accuracy of the detectors of human faces and dogs based on the total correctly detected images divided by the total predictions which should give us a result close to 100%. I will also calculate the accuracy of both the CNN models based on total correctly classified divided by the total classified. In addition to this I will use the loss calculation built into the scikit-learn library [<sup>3</sup>](#references) to compare against the kaggle models.
 
 ### Project Design
 
 The following is the basic workflow that I'll be using, of which the template is provided by Udacity. I will also deploy the algorithm to be used on a basic web app. 
 
-Step 0: Import Datasets
-Step 1: Detect Humans
-Step 2: Detect Dogs
-Step 3: Create a CNN to Classify Dog Breeds (from Scratch)
-Step 4: Create a CNN to Classify Dog Breeds (using Transfer Learning)
-Step 5: Write your Algorithm
-Step 6: Test Your Algorithm
-Step 7: Deploy Algorithm using a Lambda function & RESTful API
+Step 0: Import Datasets\
+Step 1: Detect Humans\
+Step 2: Detect Dogs\
+Step 3: Create a CNN to Classify Dog Breeds (from Scratch)\
+Step 4: Create a CNN to Classify Dog Breeds (using Transfer Learning)\
+Step 5: Write your Algorithm\
+Step 6: Test Your Algorithm\
+Step 7: Deploy Algorithm using a Lambda function & RESTful API\
 Step 8: Create basic web app to upload photo and show detected information
 
 ### References
+<a name="references"></a>
 <sup>1</sup>
-[dog dataset - Udacity](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip)\
-[human dataset - Udacity](http://vis-www.cs.umass.edu/lfw/lfw.tgz)
+[Dog dataset - Udacity](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip)\
+[Human dataset - Udacity](http://vis-www.cs.umass.edu/lfw/lfw.tgz)
 
 <sup>2</sup>
-[dog breed identification](https://www.kaggle.com/c/dog-breed-identification/code)
+[Dog breed identification](https://www.kaggle.com/c/dog-breed-identification/code)
 
 <sup>3</sup>
-[scikit-learn loss function](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html)
+[Scikit-learn loss function](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html)

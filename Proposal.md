@@ -38,5 +38,5 @@ In this final section, summarize a theoretical workflow for approaching a soluti
 
 ### References
 <sup>1</sup>
-[dog dataset - Udacity](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip)
+[dog dataset - Udacity](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip)\
 [human dataset - Udacity](http://vis-www.cs.umass.edu/lfw/lfw.tgz)

@@ -7,36 +7,48 @@ Ivan Jennings
 Create a dog breed classifier that can be deployed for us on a mobile or web app.
 
 ### Domain Background
-There are thousands of dog breeds all over the world many which are easily recognisable and also many variations of each breed. There are already existing classifiers available for use using a CNN (Convolutional Neural Network), however many of the applications are built for adult use. I would like to make the resulting classifier available for a younger audience to use as an educational tool.
+There are thousands of dog breeds all over the world many which are easily recognisable and also many variations of each breed. There are already existing classifiers available for use, however many of the applications are built for adult use. I would like to make the resulting classifier available for a younger audience to use as an educational tool.
 
 ### Problem Statement
-As previously mentioned, there are many different dog breeds and variations. This project aims to create an accurate classifier for common breeds using a CNN to be deployed for use on a mobile or web app.
+As previously mentioned, there are many different dog breeds and variations. This project aims to create an accurate classifier which will determine first if the photo contains a human and/or dog, and then determine the breed of the dog. The model will be deployed so that it can be used in a mobile or web app.
 
 ### Datasets and Inputs
 The data set that will be used for this project has been provided by Udacity and are available in the referenced links <sup>1</sup>. The dog data set, which will be used for classifying breeds, contains 3 folders each for training, test and validation sets. Each set contains a folder of photos (most have less than 10 photos) for each of the 133 dog breeds. We also have a human face data set which will be used to train a model for determining if a human face is present in a photo.
 
 ### Solution Statement
-_(approx. 1 paragraph)_
-
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
+I will use the provided data sets to create classifiers which determine if a target photo contains a human or dog. And also a CNN which will determine, with proposed accuracy mentioned in the evaluation metrics below, which breed the dog is. Later I will also use transfer learning to increase the accuracy of the solution.
 
 ### Benchmark Model
-_(approximately 1-2 paragraphs)_
+The benchmark for the human and dog detector should be quite accurate - close to 100% correctly detected, however the differences between certain breeds can be quite subtle and thus more difficult to differentiate. The benchmark we will use for the classifier of breeds will be at least 10% for the initial CNN model written from scratch, and at least 60% accuracy for the CNN model using transfer learning. 
 
-In this section, provide the details for a benchmark model or result that relates to the domain, problem statement, and intended solution. Ideally, the benchmark model or result contextualizes existing methods or known information in the domain and problem given, which could then be objectively compared to the solution. Describe how the benchmark model or result is measurable (can be measured by some metric and clearly observed) with thorough detail.
+I will also compare with similar models that can be found on Kaggle <sup>2</sup>. The best model had a Multi Class Log Loss of 0.18 which we can use to compare our model.
+
+![](images/screenshot_kaggle.png)
 
 ### Evaluation Metrics
-_(approx. 1-2 paragraphs)_
-
-In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
+I will calcuate accuracy of the detectors of human faces and dogs based on the total correctly detected images divided by the total predictions which should give us a result close to 100%. I will also calculate the accuracy of both the CNN models based on total correctly classified divided by the total classified. In addition to this I will use the loss calculation built into the scikit-learn library <sup>3</sup> to compare against the kaggle models.
 
 ### Project Design
-_(approx. 1 page)_
 
-In this final section, summarize a theoretical workflow for approaching a solution given the problem. Provide thorough discussion for what strategies you may consider employing, what analysis of the data might be required before being used, or which algorithms will be considered for your implementation. The workflow and discussion that you provide should align with the qualities of the previous sections. Additionally, you are encouraged to include small visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. The discussion should clearly outline your intended workflow of the capstone project.
+The following is the basic workflow that I'll be using, of which the template is provided by Udacity. I will also deploy the algorithm to be used on a basic web app. 
 
+Step 0: Import Datasets
+Step 1: Detect Humans
+Step 2: Detect Dogs
+Step 3: Create a CNN to Classify Dog Breeds (from Scratch)
+Step 4: Create a CNN to Classify Dog Breeds (using Transfer Learning)
+Step 5: Write your Algorithm
+Step 6: Test Your Algorithm
+Step 7: Deploy Algorithm using a Lambda function & RESTful API
+Step 8: Create basic web app to upload photo and show detected information
 
 ### References
 <sup>1</sup>
 [dog dataset - Udacity](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip)\
 [human dataset - Udacity](http://vis-www.cs.umass.edu/lfw/lfw.tgz)
+
+<sup>2</sup>
+[dog breed identification](https://www.kaggle.com/c/dog-breed-identification/code)
+
+<sup>3</sup>
+[scikit-learn loss function](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html)

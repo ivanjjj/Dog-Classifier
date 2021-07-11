@@ -1,10 +1,10 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
-Ivan Jennings 
+Ivan Jennings\
 11 July 2021
 
 ## Proposal
-Create a dog breed classifier that can be deployed for us on a mobile or web app.
+Create a dog breed classifier that can be deployed for us on a mobile or web app for educational purposes.
 
 ### Domain Background
 There are thousands of dog breeds all over the world many which are easily recognisable and also many variations of each breed. There are already existing classifiers available for use, however many of the applications are built for adult use. I would like to make the resulting classifier available for a younger audience to use as an educational tool.

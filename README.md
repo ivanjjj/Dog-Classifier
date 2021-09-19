@@ -11,7 +11,7 @@ matplotlib - https://matplotlib.org \
 cv2 - https://opencv.org \
 tqdm - https://tqdm.github.io \
 torch - https://pytorch.org \
-pandas - https://pandas.pydata.org \
+pandas - https://pandas.pydata.org
 
 dog_app.html - non-executable html file
 

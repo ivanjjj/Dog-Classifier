@@ -16,6 +16,6 @@ pandas - https://pandas.pydata.org \
 dog_app.html - non-executable html file
 
 ### Reports
-Cap_Proposal.pdf - contains the capstone proposal
+Cap_Proposal.pdf - contains the capstone proposal\
 Capstone_Final_Report.pdf - contains the final report
 

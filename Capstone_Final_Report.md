@@ -12,7 +12,7 @@ This project aims to detect dog breeds in a provided image using a convolutional
 In this project I aimed to create an accurate classifier which will determine first if the photo contains a human and/or dog, and then determine the breed of the dog or similar dog breed if a face is detected. Given the large data set and resources that would be needed to upload to the cloud and lack of these required resources, I won't be deploying this classifier as originally intented.
 
 ### Metrics
-I will calculate accuracy of the detectors of human faces and dogs based on the total correctly detected images divided by the total predictions which should give us a result close to 100%. I will also calculate the accuracy of both the CNN models based on total correctly classified divided by the total classified. In addition to this I will use the loss calculation built into the scikit-learn library [<sup>4</sup>](#references) to compare against the kaggle models.
+I will calculate accuracy of the detectors of human faces and dogs based on the total correctly detected images divided by the total predictions which should give us a result close to 100%. I will also calculate the accuracy of both the CNN models based on total correctly classified divided by the total classified. For the detector models, a simple accuracy is sufficient, however because the breed classifier is looking at multiple classes rather than a binary outcome, we will need to use another metric. Other metrics such as specificity and sensitivity would also not be ideal given that we are predicting multiple classes. I will use the loss calculation built into the scikit-learn library [<sup>4</sup>](#references) to compare against the kaggle models where the closer to zero, the better. Using a loss calculation would be ideal as each misclassification is penalised and there is no upper bound on the metric, meaning that the theoretical upper limit is infinite. [<sup>7</sup>](#references)
 
 
 ## II. Analysis
@@ -161,3 +161,5 @@ As previously mentioned, I wanted to be able to use this algorithm on an online 
 <sup>6</sup>\
 [Image Net](https://image-net.org)
 
+<sup>7</sup>\
+[Metrics to Evaluate your Machine Learning Algorithm](https://towardsdatascience.com/metrics-to-evaluate-your-machine-learning-algorithm-f10ba6e38234)

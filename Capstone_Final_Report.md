@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
 Ivan Jennings
-August 28th, 2021
+September 19th, 2021
 
 ## I. Definition
 

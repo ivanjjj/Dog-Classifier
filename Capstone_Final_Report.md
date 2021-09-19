@@ -25,14 +25,18 @@ The data set that will be used for this project has been provided by Udacity and
 Because there are 133 different dog breeds, it will be useful to visualise how many images we have per dog breed and data set (e.g. training, testing or validation) so that we can see if there is any particular breed that doesn't have enough images, or see if the distribution is even.
 
 ![](images/train_plot.png)
+*Figure 1*
 ![](images/test_plot.png)
+*Figure 2*
 ![](images/valid_plot.png)
+*Figure 3*
 
 We can see that there is a reasonably even distribution between each set. The following plot also shows the distribution of resolutions within the set, which will be helpful to see what are the most common resolutions.
 
 ![](images/resolution_plot.png)
+*Figure 4*
 
-We can see that the majorit of the images are between 200 x 200 and 800 x 600 resolution, which will be helfpul to know when selecting image transformations.
+We can see in figure 4 that the majority of the images are between 200 x 200 and 800 x 600 resolution, which will be helfpul to know when selecting image transformations.
 
 ### Algorithms and Techniques
 For the initial CNN model to classify dog breeds, I will start off with a simple mode from scratch using a small number of layers and epochs after which I can increase these to find an optimal model. For the transfer learning model, I will initially use the ResNet pre-trained model as this appears to be a popular one for this function after which I may try another model depending on the performance against the benchmarks. For the face detector, I will be using the OpenCV Haar feature-based classifier. Depending on the accuracy of the classifiers I may try others.
@@ -40,10 +44,10 @@ For the initial CNN model to classify dog breeds, I will start off with a simple
 ### Benchmark
 The benchmark for the human and dog detector should be quite accurate - close to 100% correctly detected, however the differences between certain breeds can be quite subtle and thus more difficult to differentiate. The benchmark we will use for the classifier of breeds will be at least 10% for the initial CNN model written from scratch, and at least 60% accuracy for the CNN model using transfer learning. 
 
-I will also compare with similar models that can be found on Kaggle [<sup>3</sup>](#references). The best model had a Multi Class Log Loss of 0.18 which we can use to compare our model.
+I will also compare with similar models that can be found on Kaggle [<sup>3</sup>](#references). The best model had a Multi Class Log Loss of 0.18 as seen in figure 5, which we can use to compare our model.
 
 ![](images/screenshot_kaggle.png)
-
+*Figure 5*
 
 ## III. Methodology
 
@@ -82,11 +86,13 @@ Faces detected in images of humans: 98% of images (Target 100%)
 Faces detected in images of dogs: 17% of images (Target 0%)
 
 ![](images/human_face_accuracy_screenshot.png)
+*Figure 6*
 
 #### Dog Detector
 VGG-16 trained on ImageNet [<sup>6</sup>](#references)
 
 ![](images/VGG16_screenshot.png)
+*Figure 7*
 
 There were also no changes made to this pretrained model which gave the following accuracy
 
@@ -118,12 +124,14 @@ All of the initial benchmarks were met, except the example that was shown on Kag
 With the final algorithm and solution complete, I tested it on a few images obtained off the web and using personal images. I found that the solution worked well and had real world accuracy.
 
 ![](images/test_1.png)
+*Figure 8*
 
-This image above was of a known dog and breed and the classifier accurately gave the output of no face, a dog detected and the correct breed.
+Figure 8 was of a known dog and breed and the classifier accurately gave the output of no face, a dog detected and the correct breed.
 
 ![](images/test_2.png)
+*Figure 9*
 
-This second image above was an image obtained of the web of a human, and it accuractly found a face and no dog. It is also interesting to see the dog breed that the person is most alike with.
+Figure 9 was an image obtained of the web of a human, and it accuractly found a face and no dog. It is also interesting to see the dog breed that the person is most alike with.
 
 ### Reflection
 The final algorithm consisted of two detectors, human and dog as well as a dog classifier. The initial data and detector algorithms were provided by Udacity in the initial notebook and workspace. I then tested the OpenCV and VGG16 models provided, before tweaking these with my own additions and adjustments. I created a function that tested the accuracy of various pretrained models before deciding on the final models for the detectors. After completing the detectors, I worked on the CNN from scratch and trained, tested and tweaked the parameters. Then I worked on the transfer learning model for the final dog classifier which was reasonably easy given that it was a pre-trained model. Finally, I created a function to put all of the detectors and classifier into one easy to use function and tested it on a few additional images as well. Initially I wanted to implement my own website with the final functions and trained models, however this proved to be difficult due as there was a large number of images that were used. And to transfer these to a different user, outside the workspace they were already uploaded to, would take a lot of resources.

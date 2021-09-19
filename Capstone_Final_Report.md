@@ -35,10 +35,7 @@ We can see that there is a reasonably even distribution between each set. The fo
 We can see that the majorit of the images are between 200 x 200 and 800 x 600 resolution, which will be helfpul to know when selecting image transformations.
 
 ### Algorithms and Techniques
-In this section, you will need to discuss the algorithms and techniques you intend to use for solving the problem. You should justify the use of each one based on the characteristics of the problem and the problem domain. Questions to ask yourself when writing this section:
-- _Are the algorithms you will use, including any default variables/parameters in the project clearly defined?_
-- _Are the techniques to be used thoroughly discussed and justified?_
-- _Is it made clear how the input data or datasets will be handled by the algorithms and techniques chosen?_
+For the initial CNN model to classify dog breeds, I will start off with a simple mode from scratch using a small number of layers and epochs after which I can increase these to find an optimal model. For the transfer learning model, I will initially use the ResNet pre-trained model as this appears to be a popular one for this function after which I may try another model depending on the performance against the benchmarks. For the face detector, I will be using the OpenCV Haar feature-based classifier. Depending on the accuracy of the classifiers I may try others.
 
 ### Benchmark
 The benchmark for the human and dog detector should be quite accurate - close to 100% correctly detected, however the differences between certain breeds can be quite subtle and thus more difficult to differentiate. The benchmark we will use for the classifier of breeds will be at least 10% for the initial CNN model written from scratch, and at least 60% accuracy for the CNN model using transfer learning. 
@@ -51,74 +48,88 @@ I will also compare with similar models that can be found on Kaggle [<sup>3</sup
 ## III. Methodology
 
 ### Data Preprocessing
-In this section, all of your preprocessing steps will need to be clearly documented, if any were necessary. From the previous section, any of the abnormalities or characteristics that you identified about the dataset will be addressed and corrected here. Questions to ask yourself when writing this section:
-- _If the algorithms chosen require preprocessing steps like feature selection or feature transformations, have they been properly documented?_
-- _Based on the **Data Exploration** section, if there were abnormalities or characteristics that needed to be addressed, have they been properly corrected?_
-- _If no preprocessing is needed, has it been made clear why?_
+Based on the data exploration, for the dog breed images, there are varying resolutions for each image and between 27 - 77 images per breed. For the training data, I chose to use RandomResizeCrop to 224 x 224 as this will fit in with the rest of the architecture of the models. I also used RandomResizeCrop instead of Resize and CenterCrop so that if the training data is all formatted a certain way, then this will add in some noise to prevent overfitting.
 
 ### Implementation
-In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
-- _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
-- _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
-- _Was there any part of the coding process (e.g., writing complicated functions) that should be documented?_
+There are two different classifers that were needed in this project, human face detector and a dog detector / breed classifier. The first classifier was the human face detector which I used the OpenCV Haar feature-based classifier (haarcascade_frontalface_alt.xml) this classifier gave 98% accuracy for human images (98% of human images had a face detected) and 83% accuracy for dog images (17% of dog images had a face detected). The second classifier was the dog detector and breed classifier. I used the VGG-16 pretrained model for the dog detector, which gave 100% accuracy for detecting a dog (0% of humans were detected as dogs, and 100% of dogs were detected as dogs).
+
+For the initial CNN model that was created from scratch, I started off with 3 convolutional layers and 2 fully connected layers. The final fully connected layer's number of output features is 133 to match the number of dog breeds that we are trying to classify. I have used MaxPool2D to scale down the features accross the layers and I've used Dropout to help prevent overfitting. Based on the initial cross entropy loss, it was sitting around 4-5 and test accuracy was less than 10% with a fair amount of epochs. I also added in a scheduler to decay the learning rate after each 2 epochs, starting on the third epoch. 
+
+The final model that I used, was a pretrained, transfer learning model through pytorch for the final classifier. The first pretrained model that I tested was the resnet50 as this seems to be a popular architecture for this type of project. Also using cross entropy loss, it came out at 0.64 with 81% test accuracy.
 
 ### Refinement
-In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
-- _Has an initial solution been found and clearly reported?_
-- _Is the process of improvement clearly documented, such as what techniques were used?_
-- _Are intermediate and final solutions clearly reported as the process is improved?_
+Because the human detector and the transfer learning model accuracy was well within the set out metrics, no further enhancements were made apart from adjusting the number of epochs for the transfer learning classifier. For the CNN model from scratch, the accuracy and loss was not within the set out metrics, so I experimented with a few different layer designs, finally finishing with the following model.
 
+(conv1): Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+(conv2): Conv2d(32, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+(pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+(fc1): Linear(in_features=25088, out_features=500, bias=True)
+(fc2): Linear(in_features=500, out_features=133, bias=True)
+(dropout): Dropout(p=0.2)
+
+I found that two convolutional layers provided enough accuracy without needing a third layer, and the two fully connected layers were sufficient. The final model gave 3.7 test loss and 14% test accuracy which was above the 10% needed.
+
+Model training was completed using AWS services, so there were no particular constraints on the GPU resources that were needed.
 
 ## IV. Results
-_(approx. 2-3 pages)_
 
 ### Model Evaluation and Validation
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
+#### Human Face Detector
+OpenCV Haar feature-based cascade classifier [<sup>5</sup>](#references)
+There were no changes made to the human face detector model. This model gave sufficient accuracy.
+Accuracy of the human detector was as follows:
+Faces detected in images of humans: 98% of images (Target 100%)
+Faces detected in images of dogs: 17% of images (Target 0%)
+
+![](images/human_face_accuracy_screenshot.png)
+
+#### Dog Detector
+VGG-16 trained on ImageNet [<sup>6</sup>](#references)
+
+![](images/VGG16_screenshot.png)
+
+There were also no changes made to this pretrained model which gave the following accuracy
+
+Dog detected in images of dogs: 100% of images (Target 100%)
+Dog detected in images of humans: 1% of images (Target 0%)
+
+#### Dog Breed Classifier
+##### CNN from scratch
+
+The final CNN architecture that was used had the following accuracy:
+
+Correct breed detected: 124/836 (14%) (Target 10% +)
+Test Loss: 3.78
+
+##### CNN using transfer learning
+
+The final CNN architecture that was used had the following accuracy:
+
+Correct breed detected: 685/836 (81%) (Target 60% +)
+Test Loss: 0.64
 
 ### Justification
-In this section, your model’s final solution and its results should be compared to the benchmark you established earlier in the project using some type of statistical analysis. You should also justify whether these results and the solution are significant enough to have solved the problem posed in the project. Questions to ask yourself when writing this section:
-- _Are the final results found stronger than the benchmark result reported earlier?_
-- _Have you thoroughly analyzed and discussed the final solution?_
-- _Is the final solution significant enough to have solved the problem?_
+All of the initial benchmarks were met, except the example that was shown on Kaggle for dog classification which had a much lower log loss at 0.18 compared to the 0.64 that was achieved here. Although there was more data available on the example on Kaggle and fewer dog breeds predicted.
 
 
 ## V. Conclusion
-_(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+With the final algorithm and solution complete, I tested it on a few images obtained off the web and using personal images. I found that the solution worked well and had real world accuracy.
+
+![](images/test_1.png)
+
+This image above was of a known dog and breed and the classifier accurately gave the output of no face, a dog detected and the correct breed.
+
+![](images/test_2.png)
+
+This second image above was an image obtained of the web of a human, and it accuractly found a face and no dog. It is also interesting to see the dog breed that the person is most alike with.
 
 ### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+The final algorithm consisted of two detectors, human and dog as well as a dog classifier. The initial data and detector algorithms were provided by Udacity in the initial notebook and workspace. I then tested the OpenCV and VGG16 models provided, before tweaking these with my own additions and adjustments. I created a function that tested the accuracy of various pretrained models before deciding on the final models for the detectors. After completing the detectors, I worked on the CNN from scratch and trained, tested and tweaked the parameters. Then I worked on the transfer learning model for the final dog classifier which was reasonably easy given that it was a pre-trained model. Finally, I created a function to put all of the detectors and classifier into one easy to use function and tested it on a few additional images as well. Initially I wanted to implement my own website with the final functions and trained models, however this proved to be difficult due as there was a large number of images that were used. And to transfer these to a different user, outside the workspace they were already uploaded to, would take a lot of resources.
 
 ### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
-
------------
-
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?
+As previously mentioned, I wanted to be able to use this algorithm on an online website, however this proved difficult due to the resources involved, or I else I would need to re-write a lot more code to be able to download and transfer the trained model and deploy it elsewhere. I could have also made a small gain by increasing the number of epochs on the transfer learning model to be able to get a higher accuracy. These were the two most impactful improvements that I could have done, but overall I was happy with the results.
 
 ### References
 <a name="references"></a>
@@ -135,3 +146,10 @@ In this section, you will need to provide discussion as to how one aspect of the
 
 <sup>4</sup>\
 [Scikit-learn loss function](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html)
+
+<sup>5</sup>\
+[Open CV Classifiers](https://github.com/opencv/opencv/tree/master/data/haarcascades)
+
+<sup>6</sup>\
+[Image Net](https://image-net.org)
+

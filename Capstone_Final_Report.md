@@ -6,19 +6,19 @@ September 19th, 2021
 ## I. Definition
 
 ### Project Overview
-This project aims to detect dog breeds in a provided image using a convolutional neural network. There are many different image classifiers out there, including for animal breeds. Dog breeds present a challenge to determine specific breed, given that humans have intervened in the breeding resulitng in various different breeds and sub-breeds. Additionally, some different species of dog can look completly different. *"This domain is especially challenging since the appearance of corresponding parts can vary dramatically, e.g., the faces of bulldogs and beagles are very different."* *[<sup>1</sup>](#references)
+This project aims to detect dog breeds in a provided image using a convolutional neural network. There are many different image classifiers out there, including for animal breeds. Dog breeds present a challenge to determine specific breed, given that humans have intervened in the breeding resulitng in various different breeds and sub-breeds. Additionally, some different species of dog can look completly different. *"This domain is especially challenging since the appearance of corresponding parts can vary dramatically, e.g., the faces of bulldogs and beagles are very different." *[ ^1^ ](#references) Convolutional neural networks trained with gradient descent have been in use for image classification since the 1980s, for example to recognize hand printed digits Denker, JS et al. [ ^8^ ](#references) and will be a good architecture to recognize dog breeds as well.
 
 ### Problem Statement
-In this project I aimed to create an accurate classifier which will determine first if the photo contains a human and/or dog, and then determine the breed of the dog or similar dog breed if a face is detected. Given the large data set and resources that would be needed to upload to the cloud and lack of these required resources, I won't be deploying this classifier as originally intented.
+In this project I aimed to create an accurate classifier which will determine first if the photo contains a human and/or dog, and then determine the breed of the dog or similar dog breed if a face is detected. Given the large data set and resources that would be needed to upload to the cloud and lack of these required resources, I won't be deploying this classifier as originally intended.
 
 ### Metrics
-I will calculate accuracy of the detectors of human faces and dogs based on the total correctly detected images divided by the total predictions which should give us a result close to 100%. I will also calculate the accuracy of both the CNN models based on total correctly classified divided by the total classified. For the detector models, a simple accuracy is sufficient, however because the breed classifier is looking at multiple classes rather than a binary outcome, we will need to use another metric. Other metrics such as specificity and sensitivity would also not be ideal given that we are predicting multiple classes. I will use the loss calculation built into the scikit-learn library [<sup>4</sup>](#references) to compare against the kaggle models where the closer to zero, the better. Using a loss calculation would be ideal as each misclassification is penalised and there is no upper bound on the metric, meaning that the theoretical upper limit is infinite. [<sup>7</sup>](#references)
+I will calculate accuracy of the detectors of human faces and dogs based on the total correctly detected images divided by the total predictions which should give us a result close to 100%. I will also calculate the accuracy of both the CNN models based on total correctly classified divided by the total classified. For the detector models, a simple accuracy is sufficient, however because the breed classifier is looking at multiple classes rather than a binary outcome, we will need to use another metric. Other metrics such as specificity and sensitivity would also not be ideal given that we are predicting multiple classes. I will use the loss calculation built into the scikit-learn library [ ^4^ ](#references) to compare against the kaggle models where the closer to zero, the better. Using a loss calculation would be ideal as each misclassification is penalised and there is no upper bound on the metric, meaning that the theoretical upper limit is infinite. [ ^7^ ](#references)
 
 
 ## II. Analysis
 
 ### Data Exploration
-The data set that will be used for this project has been provided by Udacity and are available in the referenced links [<sup>2</sup>](#references). The dog data set containing 8351 colour images which will be used for classifying breeds, contains 3 folders each for training, test and validation sets. Each set contains a folder of photos for each of the 133 dog breeds. The sets are not balanced between dog breeds - test sets have been 3-10 images for each breed, training sets have between 26-77 images per breed and the validation set has between 4-9 images per breed. The images also have varying resolutions in JPG format. We also have a human face data set with 13233 colour images which will be used to train a model for determining if a human face is present in a photo - this set has a range of people with about 1 image per person, with up to 40+ images per person.
+The data set that will be used for this project has been provided by Udacity and are available in the referenced links [ ^2^ ](#references). The dog data set containing 8351 colour images which will be used for classifying breeds, contains 3 folders each for training, test and validation sets. Each set contains a folder of photos for each of the 133 dog breeds. The sets are not balanced between dog breeds - test sets have been 3-10 images for each breed, training sets have between 26-77 images per breed and the validation set has between 4-9 images per breed. The images also have varying resolutions in JPG format. We also have a human face data set with 13233 colour images which will be used to train a model for determining if a human face is present in a photo - this set has a range of people with about 1 image per person, with up to 40+ images per person.
 
 
 ### Exploratory Visualization
@@ -26,8 +26,10 @@ Because there are 133 different dog breeds, it will be useful to visualise how m
 
 ![](images/train_plot.png)
 *Figure 1*
+
 ![](images/test_plot.png)
 *Figure 2*
+
 ![](images/valid_plot.png)
 *Figure 3*
 
@@ -39,15 +41,26 @@ We can see that there is a reasonably even distribution between each set. The fo
 We can see in figure 4 that the majority of the images are between 200 x 200 and 800 x 600 resolution, which will be helfpul to know when selecting image transformations.
 
 ### Algorithms and Techniques
+For classification of images, a Neural Network is a mathematical technique which was named that way as it's structure is simliar to that of the human brain which has neurons, although it does not work exactly the same way. A neural is simliar to other machine learning techniques in that it has a number of input values, which in this case are the images themselves, and a number of output values. Where the neural networks differ, is that there are a number of layers between the final output and the input. For a convolutional neural network, this is similar to a standard neural network, however the layers are not all fully connected. This can be useful for image classification as it means that some parts of images will contribute to multiple neurons and some will not, saving the number of calculations to only what is needed.
+
+![](images/Architecture-of-a-Convolutional-Neural-Network-CNN-The-traditional-CNN-structure-is.png)
+*Figure 5* [ ^12^ ](#references)
+
+A CNN is very good at classifying images, however a large data set is needed and it can use quite a lot of compute resources in training the model. Although with AWS resources, it is easy to spin up instances of GPUs or other compute resources to train the model.
+
+In addition to this, we can also use transfer learning from pre-trained models, as in most cases simliar training has been done on these models before. Transfer learning is where existing knowledge (or in this case trained models) can be used on new ideas or a new data set, rather than completely starting from scratch. ResNet50 is one of these models which has 50 layers including 1 MaxPool and 1 Average Pool layers and won awards for image classification. [ ^9^ ](#references)[ ^10^ ](#references)[ ^11^ ](#references)
+
+*"Main innovation in ResNet architectures are the use of residual layers and skip connections to solve the problem of vanishing gradient that may result in stopping the weights in the network to further update/change."*
+
 For the initial CNN model to classify dog breeds, I will start off with a simple mode from scratch using a small number of layers and epochs after which I can increase these to find an optimal model. For the transfer learning model, I will initially use the ResNet pre-trained model as this appears to be a popular one for this function after which I may try another model depending on the performance against the benchmarks. For the face detector, I will be using the OpenCV Haar feature-based classifier. Depending on the accuracy of the classifiers I may try others.
 
 ### Benchmark
 The benchmark for the human and dog detector should be quite accurate - close to 100% correctly detected, however the differences between certain breeds can be quite subtle and thus more difficult to differentiate. The benchmark we will use for the classifier of breeds will be at least 10% for the initial CNN model written from scratch, and at least 60% accuracy for the CNN model using transfer learning. 
 
-I will also compare with similar models that can be found on Kaggle [<sup>3</sup>](#references). The best model had a Multi Class Log Loss of 0.18 as seen in figure 5, which we can use to compare our model.
+I will also compare with similar models that can be found on Kaggle [ ^3^ ](#references). The best model had a Multi Class Log Loss of 0.18 as seen in figure 6, which we can use to compare our model.
 
 ![](images/screenshot_kaggle.png)
-*Figure 5*
+*Figure 6*
 
 ## III. Methodology
 
@@ -79,20 +92,20 @@ Model training was completed using AWS services, so there were no particular con
 
 ### Model Evaluation and Validation
 #### Human Face Detector
-OpenCV Haar feature-based cascade classifier [<sup>5</sup>](#references)
+OpenCV Haar feature-based cascade classifier [ ^5^ ](#references)
 There were no changes made to the human face detector model. This model gave sufficient accuracy.
 Accuracy of the human detector was as follows:
 Faces detected in images of humans: 98% of images (Target 100%)
 Faces detected in images of dogs: 17% of images (Target 0%)
 
 ![](images/human_face_accuracy_screenshot.png)
-*Figure 6*
+*Figure 7*
 
 #### Dog Detector
-VGG-16 trained on ImageNet [<sup>6</sup>](#references)
+VGG-16 trained on ImageNet [ ^6^ ](#references)
 
 ![](images/VGG16_screenshot.png)
-*Figure 7*
+*Figure 8*
 
 There were also no changes made to this pretrained model which gave the following accuracy
 
@@ -124,14 +137,14 @@ All of the initial benchmarks were met, except the example that was shown on Kag
 With the final algorithm and solution complete, I tested it on a few images obtained off the web and using personal images. I found that the solution worked well and had real world accuracy.
 
 ![](images/test_1.png)
-*Figure 8*
-
-Figure 8 was of a known dog and breed and the classifier accurately gave the output of no face, a dog detected and the correct breed.
-
-![](images/test_2.png)
 *Figure 9*
 
-Figure 9 was an image obtained of the web of a human, and it accuractly found a face and no dog. It is also interesting to see the dog breed that the person is most alike with.
+Figure 9 was of a known dog and breed and the classifier accurately gave the output of no face, a dog detected and the correct breed.
+
+![](images/test_2.png)
+*Figure 10*
+
+Figure 10 was an image obtained of the web of a human, and it accuractly found a face and no dog. It is also interesting to see the dog breed that the person is most alike with.
 
 ### Reflection
 The final algorithm consisted of two detectors, human and dog as well as a dog classifier. The initial data and detector algorithms were provided by Udacity in the initial notebook and workspace. I then tested the OpenCV and VGG16 models provided, before tweaking these with my own additions and adjustments. I created a function that tested the accuracy of various pretrained models before deciding on the final models for the detectors. After completing the detectors, I worked on the CNN from scratch and trained, tested and tweaked the parameters. Then I worked on the transfer learning model for the final dog classifier which was reasonably easy given that it was a pre-trained model. Finally, I created a function to put all of the detectors and classifier into one easy to use function and tested it on a few additional images as well. Initially I wanted to implement my own website with the final functions and trained models, however this proved to be difficult due as there was a large number of images that were used. And to transfer these to a different user, outside the workspace they were already uploaded to, would take a lot of resources.
@@ -163,3 +176,20 @@ As previously mentioned, I wanted to be able to use this algorithm on an online 
 
 <sup>7</sup>\
 [Metrics to Evaluate your Machine Learning Algorithm](https://towardsdatascience.com/metrics-to-evaluate-your-machine-learning-algorithm-f10ba6e38234)
+
+<sup>8</sup>\
+[Denker, J S , Gardner, W R., Graf, H. P, Henderson, D, Howard, R E, Hubbard, W, Jackel, L D , BaIrd, H S, and Guyon (1989) Neural network recognizer for hand-written zip code digits, AT&T Bell Laboratories](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.852.5499&rep=rep1&type=pdf)
+
+<sup>9</sup>\
+[ResNet50](https://iq.opengenus.org/resnet50-architecture/)
+
+<sup>10</sup>\
+[Deep Residual Learning for Image Recognition, Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun; Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016, pp. 770-778](https://openaccess.thecvf.com/content_cvpr_2016/html/He_Deep_Residual_Learning_CVPR_2016_paper.html)
+
+<sup>11</sup>\
+[Majeed, T., Rashid, R., Ali, D. et al. Issues associated with deploying CNN transfer learning to detect COVID-19 from chest X-rays. Phys Eng Sci Med 43, 1289–1303 (2020).](https://doi.org/10.1007/s13246-020-00934-8)
+
+<sup>12</sup>\
+[CNN Image](https://www.researchgate.net/figure/Architecture-of-a-Convolutional-Neural-Network-CNN-The-traditional-CNN-structure-is_fig1_330106889)
+
+
